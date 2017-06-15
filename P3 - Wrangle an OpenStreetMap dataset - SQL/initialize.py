@@ -11,7 +11,7 @@ import matplotlib.pyplot as plt
 import plotly as pltly
 from plotly.graph_objs import *
 
-OSM_FILE='NYC.OSM'
+OSM_FILE='NYC_SAMPLE.OSM'
 DATABASE='OpenStreetMap.db'
 mapbox_access_token='pk.eyJ1IjoibWVldG5hcmVuIiwiYSI6ImNqM3htbWtrMjAwMXUyd3BteXlpb2lmOXkifQ.tOV33V0Iv2N_Lqw--qqUwg'
 
