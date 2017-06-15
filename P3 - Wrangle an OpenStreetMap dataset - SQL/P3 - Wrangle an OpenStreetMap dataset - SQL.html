@@ -11767,10 +11767,11 @@ Here is the link to the area that was used for the project:
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[97]:</div>
+<div class="prompt input_prompt">In&nbsp;[124]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="kn">import</span> <span class="nn">csv</span>
+<div class=" highlight hl-ipython2"><pre><span></span><span class="c1">#importing required modules - XML, CSV, SQLite and plotting</span>
+<span class="kn">import</span> <span class="nn">csv</span>
 <span class="kn">import</span> <span class="nn">codecs</span>
 <span class="kn">import</span> <span class="nn">pprint</span>
 <span class="kn">import</span> <span class="nn">re</span>
@@ -11794,6 +11795,7 @@ Here is the link to the area that was used for the project:
 
 <span class="n">pltly</span><span class="o">.</span><span class="n">tools</span><span class="o">.</span><span class="n">set_credentials_file</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="s1">&#39;meetnaren&#39;</span><span class="p">,</span> <span class="n">api_key</span><span class="o">=</span><span class="s1">&#39;02FpawrSfFQjW88Ry5UA&#39;</span><span class="p">)</span>
 
+<span class="c1"># Helper functions for connecting to database, fetching elements from XML file</span>
 <span class="k">def</span> <span class="nf">connect_db</span><span class="p">():</span>
     <span class="n">conn</span><span class="o">=</span><span class="n">sqlite3</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">DATABASE</span><span class="p">)</span>
     <span class="n">c</span><span class="o">=</span><span class="n">conn</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
@@ -11812,6 +11814,7 @@ Here is the link to the area that was used for the project:
             <span class="k">yield</span> <span class="n">elem</span>
             <span class="n">root</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
 
+<span class="c1"># This code is from the case study</span>
 <span class="k">class</span> <span class="nc">UnicodeDictWriter</span><span class="p">(</span><span class="n">csv</span><span class="o">.</span><span class="n">DictWriter</span><span class="p">,</span> <span class="nb">object</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Extend csv.DictWriter to handle Unicode input&quot;&quot;&quot;</span>
 
@@ -11823,8 +11826,6 @@ Here is the link to the area that was used for the project:
     <span class="k">def</span> <span class="nf">writerows</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rows</span><span class="p">):</span>
         <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">rows</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">writerow</span><span class="p">(</span><span class="n">row</span><span class="p">)</span>
-
-<span class="n">c</span><span class="o">=</span><span class="n">connect_db</span><span class="p">()</span>
 </pre></div>
 
 </div>
@@ -11859,7 +11860,7 @@ Here is the link to the area that was used for the project:
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[98]:</div>
+<div class="prompt input_prompt">In&nbsp;[125]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span></span><span class="n">abbr_names</span> <span class="o">=</span> <span class="p">{</span>
@@ -11949,7 +11950,7 @@ Here is the link to the area that was used for the project:
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[99]:</div>
+<div class="prompt input_prompt">In&nbsp;[126]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span></span><span class="n">street_names</span><span class="o">=</span><span class="p">{}</span>
@@ -12097,7 +12098,7 @@ Here is the link to the area that was used for the project:
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[100]:</div>
+<div class="prompt input_prompt">In&nbsp;[127]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span></span><span class="n">zipcodes</span><span class="o">=</span><span class="p">{}</span>
@@ -12178,7 +12179,7 @@ Here is the link to the area that was used for the project:
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[101]:</div>
+<div class="prompt input_prompt">In&nbsp;[128]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span></span><span class="k">def</span> <span class="nf">is_extension</span><span class="p">(</span><span class="n">zipcode</span><span class="p">):</span>
@@ -12255,7 +12256,7 @@ Here is the link to the area that was used for the project:
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[102]:</div>
+<div class="prompt input_prompt">In&nbsp;[129]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span></span><span class="n">counties</span><span class="o">=</span><span class="p">{}</span>
@@ -12315,7 +12316,7 @@ Here is the link to the area that was used for the project:
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[103]:</div>
+<div class="prompt input_prompt">In&nbsp;[130]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span></span><span class="k">def</span> <span class="nf">clean_counties</span><span class="p">(</span><span class="n">elem</span><span class="p">):</span>
@@ -12350,7 +12351,7 @@ and so on.</li>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[104]:</div>
+<div class="prompt input_prompt">In&nbsp;[131]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span></span><span class="n">phone_number_chars</span><span class="o">=</span><span class="nb">set</span><span class="p">()</span>
@@ -12400,7 +12401,7 @@ and so on.</li>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[105]:</div>
+<div class="prompt input_prompt">In&nbsp;[132]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span></span><span class="k">def</span> <span class="nf">clean_phone_numbers</span><span class="p">(</span><span class="n">elem</span><span class="p">):</span>
@@ -12451,7 +12452,7 @@ and so on.</li>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[106]:</div>
+<div class="prompt input_prompt">In&nbsp;[133]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span></span><span class="c1">#mapping the node IDs to the phone numbers</span>
@@ -12515,7 +12516,7 @@ and so on.</li>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[107]:</div>
+<div class="prompt input_prompt">In&nbsp;[134]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span></span><span class="n">cities</span><span class="o">=</span><span class="p">{}</span>
@@ -12586,7 +12587,7 @@ and so on.</li>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[108]:</div>
+<div class="prompt input_prompt">In&nbsp;[135]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span></span><span class="n">city_mappings</span><span class="o">=</span><span class="p">{</span>
@@ -12655,7 +12656,7 @@ and so on.</li>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[109]:</div>
+<div class="prompt input_prompt">In&nbsp;[136]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span></span><span class="n">NODES_PATH</span> <span class="o">=</span> <span class="s2">&quot;nodes.csv&quot;</span>
@@ -12732,7 +12733,7 @@ and so on.</li>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[110]:</div>
+<div class="prompt input_prompt">In&nbsp;[137]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span></span><span class="k">with</span> <span class="n">codecs</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">NODES_PATH</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">nodes_file</span><span class="p">,</span> \
@@ -12752,7 +12753,10 @@ and so on.</li>
     <span class="n">ways_writer</span><span class="o">.</span><span class="n">writeheader</span><span class="p">()</span>
     <span class="n">way_nodes_writer</span><span class="o">.</span><span class="n">writeheader</span><span class="p">()</span>
     <span class="n">way_tags_writer</span><span class="o">.</span><span class="n">writeheader</span><span class="p">()</span>
-
+    
+    <span class="n">nodeCount</span><span class="o">=</span><span class="mi">0</span>
+    <span class="n">wayCount</span><span class="o">=</span><span class="mi">0</span>
+    
     <span class="k">for</span> <span class="n">element</span> <span class="ow">in</span> <span class="n">get_element</span><span class="p">(</span><span class="n">OSM_FILE</span><span class="p">):</span>
         <span class="n">element</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;add&#39;</span><span class="p">,</span><span class="s1">&#39;True&#39;</span><span class="p">)</span>
         <span class="n">element</span><span class="o">=</span><span class="n">clean_street_words</span><span class="p">(</span><span class="n">element</span><span class="p">)</span>
@@ -12767,13 +12771,33 @@ and so on.</li>
             <span class="k">if</span> <span class="n">element</span><span class="o">.</span><span class="n">tag</span> <span class="o">==</span> <span class="s1">&#39;node&#39;</span><span class="p">:</span>
                 <span class="n">nodes_writer</span><span class="o">.</span><span class="n">writerow</span><span class="p">(</span><span class="n">el</span><span class="p">[</span><span class="s1">&#39;node&#39;</span><span class="p">])</span>
                 <span class="n">node_tags_writer</span><span class="o">.</span><span class="n">writerows</span><span class="p">(</span><span class="n">el</span><span class="p">[</span><span class="s1">&#39;node_tags&#39;</span><span class="p">])</span>
+                <span class="n">nodeCount</span><span class="o">+=</span><span class="mi">1</span>
             <span class="k">elif</span> <span class="n">element</span><span class="o">.</span><span class="n">tag</span> <span class="o">==</span> <span class="s1">&#39;way&#39;</span><span class="p">:</span>
                 <span class="n">ways_writer</span><span class="o">.</span><span class="n">writerow</span><span class="p">(</span><span class="n">el</span><span class="p">[</span><span class="s1">&#39;way&#39;</span><span class="p">])</span>
                 <span class="n">way_nodes_writer</span><span class="o">.</span><span class="n">writerows</span><span class="p">(</span><span class="n">el</span><span class="p">[</span><span class="s1">&#39;way_nodes&#39;</span><span class="p">])</span>
                 <span class="n">way_tags_writer</span><span class="o">.</span><span class="n">writerows</span><span class="p">(</span><span class="n">el</span><span class="p">[</span><span class="s1">&#39;way_tags&#39;</span><span class="p">])</span>
+                <span class="n">wayCount</span><span class="o">+=</span><span class="mi">1</span>
+                
+    <span class="k">print</span> <span class="s2">&quot;No. of nodes written: &quot;</span><span class="p">,</span><span class="n">nodeCount</span>
+    <span class="k">print</span> <span class="s2">&quot;No. of ways written : &quot;</span><span class="p">,</span><span class="n">wayCount</span>
 </pre></div>
 
 </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area"><div class="prompt"></div>
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>No. of nodes written:  249935
+No. of ways written :  44323
+</pre>
+</div>
+</div>
+
 </div>
 </div>
 
@@ -12785,6 +12809,7 @@ and so on.</li>
 <div class="text_cell_render border-box-sizing rendered_html">
 <h1 id="4.-Data-analysis">4. Data analysis<a class="anchor-link" href="#4.-Data-analysis">&#182;</a></h1><p>I have created the tables in the database using the schema found here:
 <a href="https://gist.github.com/swwelch/f1144229848b407e0a5d13fcb7fbbd6f">https://gist.github.com/swwelch/f1144229848b407e0a5d13fcb7fbbd6f</a></p>
+<p>After importing the data into the database, here are the final file sizes.</p>
 <h2 id="File-sizes">File sizes<a class="anchor-link" href="#File-sizes">&#182;</a></h2>
 </div>
 </div>
@@ -12807,7 +12832,7 @@ ways_tags.csv    - 8,126 KB
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[120]:</div>
+<div class="prompt input_prompt">In&nbsp;[138]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span></span><span class="n">c</span><span class="o">=</span><span class="n">connect_db</span><span class="p">()</span>
@@ -12867,7 +12892,7 @@ No. of unique users:  1095
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[112]:</div>
+<div class="prompt input_prompt">In&nbsp;[139]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span></span><span class="k">def</span> <span class="nf">groupByPlot</span><span class="p">(</span><span class="n">df</span><span class="p">,</span><span class="n">title</span><span class="p">,</span><span class="n">xlabel</span><span class="p">):</span>
@@ -13131,7 +13156,7 @@ kqSiWdhKkiRJkor2/wDmkfgUIRFitAAAAABJRU5ErkJggg==
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[113]:</div>
+<div class="prompt input_prompt">In&nbsp;[140]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span></span><span class="n">query</span> <span class="o">=</span> <span class="s1">&#39;SELECT VALUE FROM NODES_TAGS WHERE KEY=&quot;capacity&quot; AND ID IN (SELECT ID FROM NODES_TAGS WHERE KEY=&quot;amenity&quot; AND VALUE=&quot;bicycle_parking&quot;)&#39;</span>
@@ -13171,7 +13196,7 @@ kqSiWdhKkiRJkor2/wDmkfgUIRFitAAAAABJRU5ErkJggg==
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[114]:</div>
+<div class="prompt input_prompt">In&nbsp;[141]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span></span><span class="k">def</span> <span class="nf">amenities_by_zipcode</span><span class="p">(</span><span class="n">c</span><span class="p">,</span><span class="n">amenity</span><span class="p">):</span>
@@ -13198,7 +13223,7 @@ kqSiWdhKkiRJkor2/wDmkfgUIRFitAAAAABJRU5ErkJggg==
 
 
 <div class="output_text output_subarea ">
-<pre>&lt;matplotlib.figure.Figure at 0x18d68b38&gt;</pre>
+<pre>&lt;matplotlib.figure.Figure at 0x1b04a5f8&gt;</pre>
 </div>
 
 </div>
@@ -13758,6 +13783,16 @@ wbFYlSRJkiQNjsWqJEmSJGlwLFYlSZIkSYNjsSpJkiRJGpz/D0Sht+vSLwBgAAAAAElFTkSuQmCC
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
+<p>We could see that downtown Manhattan, East Village and Williamsburg in the Brooklyn borough are very popular. While there are a lot of restaurants and cafes in downtown Manhattan, there are a lot of bars in the Williamsburg and East Village areas.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
 <h3 id="Ways">Ways<a class="anchor-link" href="#Ways">&#182;</a></h3><p>Let us focus on the way tags now. How many one-way roads are in the map area we selected?</p>
 
 </div>
@@ -13765,7 +13800,7 @@ wbFYlSRJkiQNjsWqJEmSJGlwLFYlSZIkSYNjsSpJkiRJGpz/D0Sht+vSLwBgAAAAAElFTkSuQmCC
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[115]:</div>
+<div class="prompt input_prompt">In&nbsp;[142]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span></span><span class="n">query</span> <span class="o">=</span> <span class="s1">&#39;SELECT VALUE, COUNT(*) FROM WAYS_TAGS WHERE KEY=&quot;oneway&quot; AND VALUE IN (&quot;yes&quot;,&quot;no&quot;) GROUP BY VALUE&#39;</span>
@@ -13817,7 +13852,7 @@ wbFYlSRJkiQNjsWqJEmSJGlwLFYlSZIkSYNjsSpJkiRJGpz/D0Sht+vSLwBgAAAAAElFTkSuQmCC
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[116]:</div>
+<div class="prompt input_prompt">In&nbsp;[143]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span></span><span class="n">query</span> <span class="o">=</span> <span class="s1">&#39;SELECT A.ID, B.VALUE, COUNT(*) FROM WAYS_NODES A, WAYS_TAGS B WHERE A.ID=B.ID AND B.KEY=&quot;name&quot; GROUP BY A.ID ORDER BY COUNT(*) DESC LIMIT 10&#39;</span>
@@ -13857,7 +13892,7 @@ wbFYlSRJkiQNjsWqJEmSJGlwLFYlSZIkSYNjsSpJkiRJGpz/D0Sht+vSLwBgAAAAAElFTkSuQmCC
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[117]:</div>
+<div class="prompt input_prompt">In&nbsp;[144]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span></span><span class="n">query</span> <span class="o">=</span> <span class="s1">&#39;SELECT A.ID, B.VALUE, COUNT(*) FROM WAYS_TAGS A, WAYS_TAGS B WHERE A.ID=B.ID AND B.KEY=&quot;name&quot; GROUP BY A.ID ORDER BY COUNT(*) DESC LIMIT 10&#39;</span>
@@ -13907,7 +13942,7 @@ wbFYlSRJkiQNjsWqJEmSJGlwLFYlSZIkSYNjsSpJkiRJGpz/D0Sht+vSLwBgAAAAAElFTkSuQmCC
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[118]:</div>
+<div class="prompt input_prompt">In&nbsp;[146]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span></span><span class="n">query</span> <span class="o">=</span> <span class="s1">&#39;SELECT A.LAT, A.LON, B.VALUE, C.VALUE FROM NODES A, NODES_TAGS B, NODES_TAGS C WHERE A.ID=B.ID AND B.ID=C.ID AND B.KEY=&quot;amenity&quot; AND B.VALUE IN (&quot;restaurant&quot;, &quot;cafe&quot;, &quot;bar&quot;) AND C.KEY=&quot;name&quot;&#39;</span>
@@ -13964,10 +13999,10 @@ wbFYlSRJkiQNjsWqJEmSJGlwLFYlSZIkSYNjsSpJkiRJGpz/D0Sht+vSLwBgAAAAAElFTkSuQmCC
 <div class="output">
 
 
-<div class="output_area"><div class="prompt output_prompt">Out[118]:</div>
+<div class="output_area"><div class="prompt output_prompt">Out[146]:</div>
 
 <div class="output_html rendered_html output_subarea output_execute_result">
-<iframe id="igraph" scrolling="no" style="border:none;" seamless="seamless" src="https://plot.ly/~meetnaren/48.embed" height="525px" width="100%"></iframe>
+<iframe id="igraph" scrolling="no" style="border:none;" seamless="seamless" src="https://plot.ly/~meetnaren/50.embed" height="525px" width="100%"></iframe>
 </div>
 
 </div>
