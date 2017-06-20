@@ -25,6 +25,14 @@ abbr_names = {
 abbr_street_names={}
 
 def find_abbr_street_names(elem):
+    """Find all the different street name types in the XML file as listed in abbr_names.
+
+    Args:
+        elem (XML Element): The element with the street name that needs to be parsed
+
+    Returns:
+        None
+    """
     for tag in elem.iter('tag'):
         keytext=tag.attrib['k']
         if keytext.startswith('addr:street') or keytext.startswith('tiger:name_type'):
@@ -38,4 +46,4 @@ def find_abbr_street_names(elem):
 for elem in get_element(OSM_FILE):
     find_abbr_street_names(elem)
 
-pprint.pprint(abbr_street_names)
+print abbr_street_names

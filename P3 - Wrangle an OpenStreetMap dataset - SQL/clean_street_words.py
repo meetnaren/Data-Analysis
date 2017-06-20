@@ -5,6 +5,14 @@ street_names={}
 abbr_street_names={}
 
 def clean_street_words(elem):
+    """Clean up the abbreviated street name types in the XML file.
+
+    Args:
+        elem (XML Element): The element with the street name that needs to be cleaned
+
+    Returns:
+        elem (XML Element): The element with the cleaned up street name
+    """
     for tag in elem.iter('tag'):
         keytext=tag.attrib['k']
         if keytext.startswith('addr:street') or keytext.startswith('tiger:name_type'):

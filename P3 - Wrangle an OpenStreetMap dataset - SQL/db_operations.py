@@ -17,12 +17,21 @@ print "No. of unique users: ", execute_query(c,query)[[0]][0][0]
 #------------------------------------------------------------------------------------------------------------------------
 # Helper function to plot "group by" query data
 def groupByPlot(df,title,xlabel):
+    """ Plot a barchart based on the group by query results passed
+    Args:
+        df (DataFrame)  : results of the query in a Pandas DataFrame format
+        title (str)     : title of the barchart
+        xlabel (str)    : X-Axis title
+    Returns:
+        None
+    """
     plt.figure(figsize=(16,4))
     plt.bar(range(len(df)),df[1].tolist())
     plt.xticks(range(len(df)),df[0].tolist(),rotation='vertical')
     plt.ylabel('Count')
     plt.xlabel(xlabel)
     plt.title(title)
+    return None
     
 #------------------------------------------------------------------------------------------------------------------------
 

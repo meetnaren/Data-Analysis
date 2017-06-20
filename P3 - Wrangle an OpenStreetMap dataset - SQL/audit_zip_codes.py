@@ -3,6 +3,14 @@ from initialize import *
 zipcodes={}
 
 def audit_zip_codes(elem):
+    """Find all problematic zip codes in the element
+
+    Args:
+        elem (XML Element): The element with the zip code that needs to be analyzed
+
+    Returns:
+        None
+    """
     for tag in elem.iter('tag'):
         keytext=tag.attrib['k']
         if keytext.startswith('addr:postcode') or keytext.startswith('tiger:zip'):

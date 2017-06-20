@@ -9,7 +9,16 @@ phone_numbers_dict={
 
 phone_number_chars=set('+0123456789')
 
-def clean_phone_numbers(elem):
+def clean_phone_numbers(elem, phone_numbers=phone_numbers_dict):
+    """Clean problematic phone numbers
+
+    Args:
+        elem (XML Element)  : The element with the phone number that needs to be analyzed and cleaned
+        phone_numbers (dict): Mapping of incorrect phone numbers to the correct ones. Defaults to phone_numbers_dict
+
+    Returns:
+        elem (XML Element)  : The element with the cleaned phone number
+    """
     for tag in elem.iter('tag'):
         keytext=tag.attrib['k']
         if keytext.find('phone')>-1:
