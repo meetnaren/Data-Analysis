@@ -1,0 +1,497 @@
+---
+title: "A Project on Exploratory Data Analysis"
+author: "Narendran Santhanam"
+date: "July 12, 2017"
+output: html_document
+---
+
+```{r global_options, include=FALSE}
+knitr::opts_chunk$set(echo=FALSE, warning=FALSE, message=FALSE,fig.width=15,fig.height = 10)
+
+```
+
+#About the dataset
+I chose the bikeshare dataset from the UCI machine learning repository found here: https://archive.ics.uci.edu/ml/datasets/Bike+Sharing+Dataset.
+This dataset contains the hourly  count of rental bikes between years 2011 and 2012 in Capital bikeshare system, with the corresponding weather and seasonal information.
+
+#Dataset Overview
+Let us get a high level overview of the dataset and its attributes.
+```{r}
+library(ggplot2)
+library(dplyr)
+library(grid)
+library(gridExtra)
+library(RColorBrewer)
+library(cowplot)
+library(memisc)
+library(scales)
+
+whitetheme=theme(panel.background = element_rect(fill = 'white'))
+
+bikehours=read.csv('hour.csv',stringsAsFactors = FALSE)
+cat('No. of columns:', ncol(bikehours))
+cat('No. of rows   :',nrow(bikehours))
+
+#The code below formats the different columns to their corresponding data formats and cleans up some data.
+bikehours$dteday <- as.Date(bikehours$dteday)
+bikehours$season <- factor(bikehours$season, 
+  labels=c('Spring','Summer','Fall','Winter'))
+bikehours$mnth <- ordered(bikehours$mnth)
+bikehours$yr <- bikehours$yr+2011
+bikehours$yr <- ordered(bikehours$yr)
+bikehours$hr <- ordered(bikehours$hr)
+bikehours$holiday <- factor(bikehours$holiday)
+bikehours$weekday <- factor(bikehours$weekday,
+  labels=c('Sunday','Monday','Tuesday','Wednesday',
+           'Thrusday','Friday','Saturday'))
+bikehours$workingday <- factor(bikehours$workingday)
+bikehours$weathersit <- factor(bikehours$weathersit,
+  labels=c("Clear with a few clouds", 
+           "Mist + Cloudy", 
+           "Light rain / snow",
+           "Heavy rain / snow"))
+
+#Temperature is normalized in the dataset. So converting it into C and F data
+bikehours$tempCelsius <- bikehours$temp*47-8
+bikehours$tempFahrenheit <- bikehours$tempCelsius*(9/5)+32
+#Windspeed is normalized to a max of 67
+bikehours$windspeed <- bikehours$windspeed*67
+
+hours <- as.numeric(as.character(bikehours$hr))
+bikehours$TimeOfDay <- ""
+bikehours$TimeOfDay[hours>=0 & hours<=7] <- 'Night'
+bikehours$TimeOfDay[hours>7 & hours<=15] <- 'Daytime'
+bikehours$TimeOfDay[hours>15 & hours<=23] <- 'Evening'
+bikehours$TimeOfDay=factor(bikehours$TimeOfDay)
+
+names(bikehours) <- c('ID','Date','Season','Year','Month','Hour','Holiday',
+                      'Weekday','WorkingDay','Weather','Temperature',
+                      'FeelsLikeTemp','Humidity','WindSpeed','Casual',
+                      'Registered','Total','Celsius','Fahrenheit','TimeOfDay')
+
+str(bikehours)
+
+
+
+```
+Our dataset contains 16 variables (instant is an ID column) and more than 17000 observations.
+
+#Univariate Plots
+Our variables of interest are Total, Registered and Casual. Total is the total count of rental bikes for a certain hour of the day, which is the sum of Registered bikes (bikes rented by regular subscribers) and Casual rental bikes. Let us take a look at the distribution of these variables.
+```{r}
+
+ggplot(aes(x=Total),data=bikehours)+
+  geom_histogram()
+
+```
+
+The histogram looks skewed to the right. Let's apply a log transformation to see the distribution.
+
+```{r}
+ggplot(aes(x=Total),data=bikehours)+
+  geom_histogram()+
+  scale_x_log10(breaks=seq(0,1000,100))+
+  theme(axis.text.x = element_text(angle=90))
+```
+
+That looks better. 150-300 seems to be the most common range.
+
+Let's plot the Registered and Casual variables with the same transformation.
+
+```{r}
+ggplot(aes(x=Registered),data=bikehours)+
+  geom_histogram()+
+  scale_x_log10(breaks=seq(0,1000,100))+
+  theme(axis.text.x = element_text(angle=90))
+
+```
+
+"Registered" seems to have an almost identical distribution as "Total". Even the numbers seem pretty close to "Total". Does this mean that the number of casual bike renters was pretty low, and that adding the casual numbers to registered numbers did not affect the distribution significantly?
+
+```{r}
+ggplot(aes(x=Casual),data=bikehours)+
+  geom_histogram()+
+  scale_x_log10(breaks=seq(0,1000,50))+
+  theme(axis.text.x = element_text(angle=90))
+```
+
+It looks like the number of casual bike renters is usually pretty low compared to registered bike renters. Most of the casual numbers seem to be below 100.
+
+```{r}
+summary(bikehours[,c("Total","Registered","Casual")])
+```
+
+Let's take a look at some other variables in the dataset: Season, Weather, Temperature, etc.
+
+```{r}
+ggplot(aes(x=Season),data=bikehours)+geom_bar()
+summary(bikehours$Season)
+
+```
+Not much difference here. Looks like all seasons share an almost equal number of days.
+```{r}
+ggplot(aes(x=Weather),data=bikehours)+geom_bar()
+summary(bikehours$Weather)
+
+```
+It seems like the weather was clear most of the time. Quite a few days had cloudy skies, with very few days that had light rain and snow. There were 3 days that had heavy snow.
+```{r}
+ggplot(aes(x=Fahrenheit),data=bikehours)+
+  geom_histogram(binwidth=2)+
+  scale_x_continuous(breaks=seq(0,100,10))
+summary(bikehours$Fahrenheit)
+
+```
+Most of the time the temperature was between 40F and 75F. There were a few days with abnormally low and very high temperatures too.
+```{r}
+ggplot(aes(x=Humidity),data=bikehours)+
+  geom_histogram()
+summary(bikehours$Humidity)
+```
+The region is seen to have high humidity levels, with most days having higher than 50% humidity.
+```{r}
+ggplot(aes(x=WindSpeed),data=subset(bikehours,WindSpeed>0))+
+  geom_histogram(binwidth = 5)+
+  scale_x_continuous(breaks=seq(0,100,10))
+summary(bikehours$WindSpeed)
+```
+Nothing abnormal here - wind speed is generally low in this region, mostly less than 20 mph.
+
+#Univariate Analysis
+###What is the structure of your dataset?
+There are `r nrow(bikehours)` records in the dataset that correspond to each hour of each day in the years 2011 and 2012. The dataset gives information on the number of bikes rented by registered and casual renters during this time period. There are 16 features in the dataset with a combination of date, numeric, integer and factor (ordered and unordered) characteristics.
+
+* Date                : Date
+* Factors (ordered)   : Year, Month, Hour, Weekday
+* Factors (unordered) : Holiday, WorkingDay, Weather
+* Numeric             : Temperature (Celsius and Fahrenheit), Humidity, WindSpeed
+* Integer             : Total, Registered, Casual
+
+Other observations:
+
+* Season seems to be more or less uniformly distributed, with all the four seasons sharing an almost equal number of days.
+* Weather: Most of the days seem to be clear, with a few clouds. This is followed by misty, cloudy days and light snow days.
+* The temperature graph shows that most of the days had temperatures between 40F and 75F. There were a few days outside this range too - in the peak winter and summer seasons.
+* Humidity in the region is mostly above 50%, owing to the proximity to the coast.
+* Windspeed is generally low, mostly below 20 mph.
+
+###What is/are the main feature(s) of interest in your dataset?
+Our features of interest are Total, Registered and Casual. Total is the total number of bikes rented, which is a sum of Registered and Casual. I'd like to see if features such as temperature, humidity and others have an effect on registered or casual number of bike rentals. I suspect that weekdays will have a high number of registered bike rentals and holidays will have a high number of casual rentals. I will try to confirm the same in my analysis.
+
+###What other features in the dataset do you think will help support your investigation into your feature(s) of interest?
+I think Weekday, Workingday and Weather will be more closely correlated to the no. of bike rentals than others.
+
+###Did you create any new variables from existing variables in the dataset?
+The temperature was given in a normalized format, so I converted it to Celsius and Fahrenheit units. The wind speed was also normalized so I have converted it to absolute mph units. Other than these transformations, I've converted integers to factors and ordered factors wherever applicable.
+
+###Of the features you investigated, were there any unusual distributions? Did you perform any operations on the data to tidy, adjust, or change the form of the data? If so, why did you do this?
+I performed a log transform on the no. of bike rentals (for all three features), since the histograms based on the raw data looked right-skewed. The transformed data for Total peaks at around 200, and the one for Registered peaks at around 150. The transformed data for Casual has a few breaks in between 0 and 50, and peaks at around 40.
+
+#Bivariate Plots
+In this section, let us investigate how each of the variables affects the no. of bike rentals (Registered and Casual).
+
+```{r}
+GroupbyPlot <- function(x,y) {
+  #Take a column name as argument and create boxplots against Registered and Casual
+  #Args: 
+  #   x - name of the column by which the data should be grouped and boxplots created
+  #   y - type of plot, 'boxplot', 'column', or 'scatter'
+  
+  #Returns: None
+  
+  colname <- x
+  g1 <- ggplot(aes_string(x=colname,y='Registered'),data=bikehours)
+  g2 <- ggplot(aes_string(x=colname,y='Casual'),data=bikehours)
+  if (y=='boxplot'){
+    p1=g1+geom_boxplot()
+    p2=g2+geom_boxplot()
+  }
+  else if (y=='column') {
+    p1=g1+geom_col()
+    p2=g2+geom_col()    
+  }
+  else{
+    p1=g1+geom_jitter()
+    p2=g2+geom_jitter()
+  }
+  grid.arrange(p1,p2,ncol=2)
+}
+
+GroupbyMean <- function(colname) {
+  #Display mean values of Registered and Casual grouped by the column name
+  #Args: 
+  #   x - name of the column by which the data should be grouped and summarised
+  
+  #Returns: None
+
+  bikehours %>%
+  group_by_(colname) %>% 
+  summarise(Registered=mean(Registered),Casual=mean(Casual))
+}
+  
+```
+
+Let's start with 'Holiday' and 'WorkingDay'
+
+```{r}
+GroupbyPlot('Holiday','boxplot')
+GroupbyMean('Holiday')
+
+GroupbyPlot('WorkingDay','boxplot')
+GroupbyMean('WorkingDay')
+```
+We can see that the no. of registered bikers on holidays and non-working days is low, whereas for casual bikers, it's on the higher side.
+
+Let's look at 'Weekday'.
+
+```{r}
+GroupbyPlot('Weekday','boxplot')
+GroupbyPlot('Weekday','column')
+GroupbyMean('Weekday')
+```
+This presents a very clear trend! The no. of registered bikers is clearly higher during the weekdays, and the no. of casual bikers is clearly higher during the weekends. I think this is because most of the registered bikers use it for commuting to work, whereas most of the casual bikers may be tourists / visitors that use it during the weekends.
+
+Let's see if weather has an impact on the no. of rentals. I think the no. of bike rentals, both registered and casual, will be higher on clear days and low on bad weather days.
+```{r}
+GroupbyPlot('Weather','boxplot')
+GroupbyPlot('Weather','column')
+GroupbyMean('Weather')
+```
+This confirms my theory. Clear days have a high no. of rentals, and the numbers are lower as the weather situation gets worse.
+
+Since the data is available for each hour of the day, I think the time of the day may also have an impact. Let's investigate.
+
+```{r}
+GroupbyPlot('Hour','column')
+```
+This clearly shows that the majority of the registered subscribers use the service to commute to work. The peaks at 8 AM and 5 PM show the concentration of usage during the times when subscribers go to and from work. The Casual plot, on the other hand, peaks during the day time, around 2-5 PM, and gradually goes down after that.
+
+Similar to weather, let's try plotting the numbers by season. Are the rentals high during summer?
+
+```{r}
+GroupbyPlot('Season','boxplot')
+GroupbyPlot('Season','column')
+GroupbyMean('Season')
+```
+The graphs show that the numbers are highest during fall, not summer. This could be because fall is characterized by lower temperatures, fall foliage colors and clear skies. Surprisingly though, the numbers during spring are lower than in winter - I was expecting otherwise.
+
+How do temperture, humidity and windspeed affect the bike rental numbers?
+
+```{r}
+GroupbyPlot('Fahrenheit','scatter')
+GroupbyPlot('Humidity','scatter')
+GroupbyPlot('WindSpeed','scatter')
+```
+
+These plots show that temperature and humidity don't have a significant relation to the rental numbers. The windspeed seems to have some effect - the rental numbers are low at higher wind speeds. This could be because wind speeds are really high in inclement weather.
+
+Let's see if there's any interplay between the independent variables in the dataset.
+```{r}
+ggplot(aes(x=Season,y=Fahrenheit),data=bikehours)+
+  geom_boxplot()
+```
+This is interesting. Even though temperature did not seem to have a direct impact on the rental numbers, the graph is strikingly similar to the one plotted between Season and the rental numbers. 
+
+```{r}
+ggplot(aes(x=Weather,y=Fahrenheit),data=bikehours)+
+  geom_boxplot()
+```
+Surprisingly, there isn't too much variability in the temperature with respect to weather, except during the days with heavy rain / snow. I was expecting a decreasing trend similar to the Weather vs. no. of rentals plot.
+
+```{r}
+ggplot(aes(x=Weather,y=Humidity),data=bikehours)+
+  geom_boxplot()
+```
+There is a clear relation between weather and humidity, with rainy and snowy days having high humidity. I wonder if temperature and humidity together affect the bike rentals. I will explore this in the multivariate plots.
+
+```{r}
+ggplot(aes(x=Weather,y=WindSpeed),data=bikehours)+
+  geom_boxplot()
+```
+The wind speed does not vary too much with respect to the weather conditions.
+
+#Bivariate analysis
+###Talk about some of the relationships you observed in this part of the investigation. How did the feature(s) of interest vary with other features in the dataset?
+Analyzing the main features of interest (Registered and Casual) with the other variables revealed interesting insights. The most interesting was how the numbers varied based on whether a day was a working day or not. It was clear that the majority of registered bike rentals are used for commuting to work, whereas the majority of casual bike rentals are used by tourists / visitors.
+
+###Did you observe any interesting relationships between the other features (not the main feature(s) of interest)?
+Yes. When I analyzed the impact of temperature and humidity on the no. of rentals, there wasn't a clear relationship from the plot. But, when I plotted temperature and season together, I could see that the relationship was almost identical to the one between season and the no. of rentals. This leads me to believe that temperature may indirectly impact the no. of rentals. Similarly, humidity also had a relationship with season, whereas it didn't seem to have any with the no. of rentals.
+
+###What was the strongest relationship you found?
+The no. of rentals clearly depends on whether the day was a working day or not, and also the time of the day in case of the registered rentals. Also, the weather conditions and the season of the year definitely have an impact on the no. of rentals.
+
+#Multivariate plots
+Let us look at some density plots, comparing Registered and Casual across different parameters.
+
+```{r}
+DensityPlot <- function(x,y) {
+  #Display density plots of Registered and Casual against the supplied argument column
+  #Args: 
+  #   x - name of the column by which the the density plots should be categorized
+  #   y - color palette to be used
+  #Returns: None
+  
+  colname <- x
+  g1 <- ggplot(aes_string(x='Registered',color=colname),data=bikehours)+
+    geom_density()+
+    scale_color_brewer(palette = y,guide=guide_legend(title.position = 'top',nrow=1))+
+    scale_x_sqrt(limits=c(0,1000),breaks=seq(0,750,250))+
+    theme(legend.position = 'None')
+    
+  g2 <- ggplot(aes_string(x='Casual',color=colname),data=bikehours)+
+    geom_density()+
+    scale_color_brewer(palette = y)+
+    ylab("")+
+    scale_x_sqrt()+
+    theme(legend.position = 'None')
+  
+  legendBottom <- get_legend(g1+theme(legend.position = 'bottom',legend.justification = 'center'))
+  
+  plot_grid(plot_grid(g1,g2,nrow=1),legendBottom,ncol=1,rel_heights =c(1,.2))
+  #grid.arrange(g1,g2,ncol=1)
+}
+
+DensityPlot('Weekday','Spectral')
+DensityPlot('WorkingDay','Dark2')
+DensityPlot('Weather','Dark2')
+
+```
+
+These density plots again show that while weather has the same effect on Registered and Casual bike rentals, Weekday and WorkingDay have different effects.
+
+Let us plot the bike rental numbers against date to see how the trend is. Let's also color the plot by WorkingDay.
+
+```{r}
+g1 <- ggplot(aes(x=Date,y=Registered),data=bikehours)+
+  geom_jitter(aes(color=WorkingDay),alpha=0.5)+
+  scale_color_brewer(palette = 'Set1',guide=FALSE)+
+  xlab("")
+g2 <- ggplot(aes(x=Date,y=Casual),data=bikehours)+
+  geom_jitter(aes(color=WorkingDay),alpha=0.5)+
+  scale_color_brewer(palette = 'Set1')+
+  theme(legend.position = 'None')
+legendBottom <- get_legend(g2+theme(legend.position = 'bottom',
+                                    legend.justification = 'center'))
+plot_grid(g1,g2,legendBottom,ncol=1,rel_heights =c(1,1,.2))
+  
+```
+This represents the usage of registered and casual bike rentals over the entire time period given in the dataset. Although it is reinforcing the evidence that working day causes the difference between registered and casual, it does so in a visually pleasing plot.
+
+It is also interesting to note the no. of rentals has increased in the second year, as can be seen by the higher peaks in 2012 than 2011 for both registered and casual rentals.
+
+Earlier, we saw that clear days have high number of rentals, but humidity and temperature didn't seem to have a direct effect on the bike rental numbers. But, we did notice that humidity and temperature have a significant relation with the weather. Let us plot both temperature and humidity against weather, registered and casual to investigate this further.
+```{r}
+ggplot(aes(x=Fahrenheit,y=Humidity),data=bikehours)+
+  geom_jitter(aes(color=Weather),width=.5,height=.5,alpha=0.5)+
+  scale_color_brewer(palette='Dark2')
+```
+This plot is dominated by clear days. Even on clear days, what is the ideal combination of temperature and humidity that leads to higher bike rentals?
+```{r}
+ggplot(bikehours)+
+  geom_tile(aes(Fahrenheit,Humidity,fill=Registered))+
+  scale_fill_distiller(palette='Spectral')
+
+ggplot(bikehours)+
+  geom_tile(aes(Fahrenheit,Humidity,fill=Casual))+
+  scale_fill_distiller(palette='Spectral')
+
+```
+There it is! Even though we saw that clear weather leads to high bike rentals, it also depends clearly on the temperature and humidity. The ideal conditions are 70-80F with around 40% humidity.
+
+I think the no. of rentals is impacted by time of the day, week and year, and also by environmental conditions such as temperature, humidity and so on. Let's try to build a model around these variables.
+```{r}
+Model1=lm(Registered ~ Season + Fahrenheit + Humidity + Weekday + WorkingDay + 
+            Weather + Hour + Month + Year + WindSpeed, data=bikehours)
+
+Model2=lm(Casual ~ Season + Fahrenheit + Humidity + Weekday + WorkingDay + 
+            Weather + Hour + Month + Year + WindSpeed, data=bikehours)
+
+Model3=lm(sqrt(Registered) ~ Season + Fahrenheit + Humidity + Weekday + 
+            WorkingDay + Weather + Hour + Month + Year + WindSpeed, 
+          data=bikehours)
+
+Model4=lm(sqrt(Casual) ~ Season + Fahrenheit + Humidity + Weekday + 
+            WorkingDay + Weather + Hour + Month + Year + WindSpeed, 
+          data=bikehours)
+
+mtable(Model1, Model2, Model3, Model4,sdigits=3)
+
+```
+
+I had used a square root transformation in the density plots that we saw earlier. When this transformation is applied, we are able to explain around 77% of the variance in the bike rental numbers with the variables available in the dataset. Without the transformation though, this number is much lesser.
+
+#Multivariate analysis
+###Talk about some of the relationships you observed in this part of the investigation. Were there features that strengthened each other in terms of looking at your feature(s) of interest?
+There were two relationships that stood out in this analysis that we had not seen before. 
+* The bike rentals had actually increased in 2012 compared to 2011. This was clear from the date plot of casual and registered rentals.
+* In the bivariate analysis, we saw that temperature and humidity did not have much impact on the no. of bike rentals directly. Here, when plotted together with the rental numbers, we were able to see the ideal conditions that resulted in high rental numbers.
+
+###Were there any interesting or surprising interactions between features?
+The combined effect of temperature and humidity was really surprising and unexpected.
+
+###Did you create any models with your dataset? Discuss the strengths and limitations of your model.
+Yes. There were time-related and environmental variables that seemed to impact the no. of bike rentals. So I created a linear model to assess the predictive strength of the variables. Since I used a square root transformation for drawing the density plots, I checked if this transformation will give me a better model, and it did.
+The variables were able to explain 77% of the variance in the bike rental numbers.
+
+#Final Plots and Summary
+###Plot One
+```{r}
+g1 <- ggplot(aes(x=Weekday,y=Registered),data=bikehours)+
+  ylab('No. of registered bike rentals')+
+  xlab('Day of the week')+
+  scale_y_continuous(labels=comma)+
+  geom_col()
+g2 <- ggplot(aes(x=Weekday,y=Casual),data=bikehours)+
+  ylab('No. of casual bike rentals')+
+  xlab('Day of the week')+
+  scale_y_continuous(labels=comma)+
+ geom_col()
+grid.arrange(g1,g2,nrow=1,top='No. of bike rentals by day of the week')
+```
+
+###Description One
+The distribution of registered vs. casual bike rentals over the day of the week shows that registered bike rentals are probably used by people who commute to work, and thus higher over the weekdays. Casual bike rentals are used by people who are tourists or visitors and hence higher over the weekends.
+
+###Plot Two
+```{r}
+g1 <- ggplot(aes(x=Date,y=Registered),data=bikehours)+
+  geom_jitter(aes(color=WorkingDay),alpha=0.5)+
+  scale_color_brewer(palette = 'Set1',guide=FALSE)+
+  ggtitle('Registered and Casual bike rentals by Date and WorkingDay')
+g2 <- ggplot(aes(x=Date,y=Casual),data=bikehours)+
+  geom_jitter(aes(color=WorkingDay),alpha=0.5)+
+  scale_color_brewer(palette = 'Set1')+
+  theme(legend.position = 'None')
+legendBottom <- get_legend(g2+theme(legend.position = 'bottom',
+                                    legend.justification = 'center'))
+plot_grid(g1,g2,legendBottom,ncol=1,rel_heights =c(1,1,.2))
+```
+
+###Description Two
+This comparison plot shows two things - the increase in bike rentals in 2012 from 2011, and difference in usage of registered and casual bike rentals.
+
+###Plot Three
+```{r}
+g1=ggplot(bikehours)+
+  geom_tile(aes(Fahrenheit,Humidity,fill=Registered))+
+  scale_fill_distiller(palette='Spectral')+
+  ggtitle('Distribution of bike rentals by temperature and humidity')
+g2=ggplot(bikehours)+
+  geom_tile(aes(Fahrenheit,Humidity,fill=Casual))+
+  scale_fill_distiller(palette='Spectral')
+plot_grid(g1,g2,ncol=1)
+```
+
+###Description Three
+This comparison plot shows the ideal temperature and humidity conditions during which bike rentals were high in the observed time period. The registered bike rentals seem to peak at around 75-80F and 40% humidity zone. On the other hand, casual bike rentals seem to peak at around 70-75F and 40% humidity zone.
+
+#Reflection
+The bike sharing dataset contains more than 17000 observations of bike rental numbers in the registered and casual categories, supported by a host of variables. These variables can be classified into two types: temporal and environmental. Temporal, or time-based variables include weekday, workingday, hour, month, year and season. Environmental variables include weather, humidity, temperature and windspeed.
+
+After understanding the distrbution of the individual variables in the dataset, I started exploring the relationships between the different variables and how they affect the no. of bike rentals. I found that there was a clear difference in how the day of the week affected the registered and casual bike rentals. This was further confirmed by the impact of Holiday and WorkingDay variables on the bike rentals. Apart from the day of the week, the hour of the day also had an impact on the no. of bike rentals.
+
+While all these time-related variables had a clear relation with the bike rentals, the relation with environmental variables wasn't easy to decipher. The weather did have some impact but it looked very generic and easy to predict - clear days obviously had higher bike rentals. I couldn't easily figure out how temperature and humidity affected the dependent variables, until I plotted them together.
+
+With all these variables, I was able to create a linear model, which was able to explain around 77% of the variance of both the registered and casual bike rentals.
+
+I think there may be other variables not included in the dataset that could increase the predictive power of the model. For example, traffic conditions, road conditions and days of important public events could be important factors. Also, if we had data for a longer time period, that could also increase the accuracy.
