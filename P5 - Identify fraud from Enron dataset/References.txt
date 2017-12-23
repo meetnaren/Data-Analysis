@@ -1,0 +1,4 @@
+https://stackoverflow.com/questions/23045318/scikit-grid-search-over-multiple-classifiers-python
+http://scikit-learn.org/stable/modules/generated/sklearn.pipeline.Pipeline.html
+http://scikit-learn.org/stable/auto_examples/plot_digits_pipe.html#sphx-glr-auto-examples-plot-digits-pipe-py
+http://scikit-learn.org/stable/modules/cross_validation.html

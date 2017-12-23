@@ -1,0 +1,55 @@
+Fitting 1000 folds for each of 44 candidates, totalling 44000 fits
+[Parallel(n_jobs=1)]: Done 44000 out of 44000 | elapsed:  9.9min finished
+Classifier: Support Vector Machine
+Best score: 0.0191666666667
+Best precision: 0.0211666666667
+Best recall: 0.0185
+Best parameters: {'dim_reduction__k': 6, 'clf__C': 100}
+
+Fitting 1000 folds for each of 55 candidates, totalling 55000 fits
+[Parallel(n_jobs=1)]: Done 55000 out of 55000 | elapsed: 10.9min finished
+Classifier: Decision Tree
+Best score: 0.32040952381
+Best precision: 0.35825
+Best recall: 0.3255
+Best parameters: {'dim_reduction__k': 9, 'clf__min_samples_split': 2}
+
+Fitting 1000 folds for each of 550 candidates, totalling 550000 fits
+[Parallel(n_jobs=1)]: Done 550000 out of 550000 | elapsed: 487.1min finished
+Classifier: Random Forest
+Best score: 0.24425952381
+Best precision: 0.297716666667
+Best recall: 0.227
+Best parameters: {'dim_reduction__k': 5, 'clf__n_estimators': 10, 'clf__min_samples_split': 5}
+
+Fitting 1000 folds for each of 11 candidates, totalling 11000 fits
+[Parallel(n_jobs=1)]: Done 11000 out of 11000 | elapsed:  2.1min finished
+Classifier: Naive Bayes
+Best score: 0.231481653477
+Best precision: 0.143841061716
+Best recall: 0.7795
+Best parameters: {'dim_reduction__k': 14}
+
+Fitting 1000 folds for each of 11 candidates, totalling 11000 fits
+[Parallel(n_jobs=1)]: Done 11000 out of 11000 | elapsed:  2.3min finished
+Classifier: Logistic Regression
+Best score: 0.448442685093
+Best precision: 0.334929834055
+Best recall: 0.7515
+Best parameters: {'dim_reduction__k': 5, 'clf__class_weight': 'balanced'}
+
+Fitting 1000 folds for each of 99 candidates, totalling 99000 fits
+[Parallel(n_jobs=1)]: Done 99000 out of 99000 | elapsed: 26.7min finished
+Classifier: K Nearest Neighbors
+Best score: 0.116926984127
+Best precision: 0.143442857143
+Best recall: 0.1095
+Best parameters: {'dim_reduction__k': 7, 'clf__n_neighbors': 3}
+
+Fitting 1000 folds for each of 99 candidates, totalling 99000 fits
+[Parallel(n_jobs=1)]: Done 99000 out of 99000 | elapsed: 326.1min finished
+Classifier: Neural Network
+Best score: 0.206667460317
+Best precision: 0.222538095238
+Best recall: 0.22
+Best parameters: {'clf__hidden_layer_sizes': (10, 5), 'clf__solver': 'lbfgs', 'dim_reduction__k': 15}

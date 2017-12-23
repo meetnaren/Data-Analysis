@@ -1,0 +1,8 @@
+Classifier,Precision,Recall,Kbest
+Support Vector Machine,0.021166667,0.0185,6
+Decision Tree,0.35825,0.3255,9
+Random Forests,0.297716667,0.227,5
+Naïve Bayes,0.143841062,0.7795,14
+Logistic Regression,0.334929834,0.7515,5
+K Neighbors,0.143442857,0.1095,7
+Neural Network,0.222538095,0.22,15
